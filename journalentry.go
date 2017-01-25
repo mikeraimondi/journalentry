@@ -19,12 +19,13 @@ import (
 const (
 	entryFormat = "2006-01-02-Journal-Entry-for-Jan-2" + ".md"
 	entryRegex  = `\d{4}-\d{2}-\d{2}-Journal-Entry-for-\D{3}-\d{1,2}` + ".md"
-	wordRegex   = `\w+`
+	wordRegex   = `\S+`
 	ratingRegex = `^[1-5]$`
 )
 
 // Entry represents a single journal entry.
 type Entry struct {
+	// TODO move FM attributes to own struct
 	Seconds     uint16
 	LowMood     uint8
 	HighMood    uint8
@@ -32,7 +33,6 @@ type Entry struct {
 	Body        []byte    `yaml:"-"`
 	Path        string    `yaml:"-"`
 	ModTime     time.Time `yaml:"-"`
-	Date        time.Time `yaml:"-"`
 }
 
 // New reads the directory named by dir and either returns an existing Entry in that directory, or creates a new one if none exist.
@@ -71,9 +71,6 @@ func (p *Entry) Load() (modified bool, err error) {
 	}
 	modified = info.ModTime() != p.ModTime
 	p.ModTime = info.ModTime()
-	if p.Date, err = time.Parse(entryFormat, filepath.Base(p.Path)); err != nil {
-		return modified, err
-	}
 	p.Body, err = frontmatter.Unmarshal(data, p)
 	return modified, err
 }
@@ -91,6 +88,10 @@ func (p *Entry) Save() (err error) {
 		fmt.Println(string(p.Body))
 	}
 	return err
+}
+
+func (p *Entry) Date() (time.Time, error) {
+	return time.Parse(entryFormat, filepath.Base(p.Path))
 }
 
 // Words returns the number of words in p.body
