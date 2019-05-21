@@ -1,5 +1,5 @@
-module github.com/mikeraimondi/journalentry
+module github.com/mikeraimondi/journalentry/v2
 
 go 1.12
 
-require github.com/mikeraimondi/frontmatter v0.0.0-20190515040544-c0cdf5c19374
+require github.com/mikeraimondi/frontmatter/v2 v2.0.0

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mikeraimondi/frontmatter"
+	"github.com/mikeraimondi/frontmatter/v2"
 )
 
 const (
